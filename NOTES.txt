@@ -1,0 +1,48 @@
+
+/usr/bin/php artisan 
+
+/usr/bin/php artisan serve --host=0.0.0.0 --port=8081
+
+
+/usr/bin/php /usr/local/bin/composer require --dev laravel/pail
+
+
+/usr/bin/php /usr/local/bin/composer require nativephp/desktop
+
+/usr/bin/php /usr/local/bin/composer require nativephp/electron
+
+/usr/bin/php /usr/local/bin/composer remove nativephp/electron
+
+
+
+/usr/bin/php artisan native:install
+
+/usr/bin/php artisan native:run
+
+
+
+/usr/bin/php artisan native:build
+
+
+Dev Mode:
+---------
+/usr/bin/php artisan native:serve
+
+npm run dev
+
+/usr/bin/php /usr/local/bin/composer native:dev
+
+----------------------------------
+
+/home/lutvi/.config/laravel-dev/storage/logs/laravel.log
+
+----------------------------------
+
+
+npm audit fix --force
+
+
+
+no such file or directory, open '/laravel-12/vendor/nativephp/php-bin/bin/linux/x64/php-8.5.zip'
+
+
