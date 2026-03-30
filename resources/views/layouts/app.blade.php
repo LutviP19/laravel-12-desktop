@@ -25,7 +25,12 @@
 
     <!-- htmx (Navigasi & Update Partial) -->
     <script src="{{ asset('assets/js/htmx.min.js') }}"></script>
-</head>
+    
+    <style>
+        .htmx-indicator { opacity: 0; transition: opacity 200ms ease-in; }
+        .htmx-request .htmx-indicator { opacity: 1; }
+        .htmx-request.htmx-indicator { opacity: 1; }
+    </style>
 <body 
     hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}' 
     class="bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
@@ -33,6 +38,7 @@
     <div class="flex h-screen" x-data="{ sidebarOpen: true }">
         
         <!-- Sidebar -->
+        @auth
         <aside class="flex flex-col h-screen bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 transition-all duration-300 sticky top-0"
             :class="sidebarOpen ? 'w-64' : 'w-20'">
             
@@ -73,6 +79,7 @@
                 </div>
             </div>
         </aside>
+        @endauth
 
 
         <!-- Main Content Area -->
@@ -104,6 +111,7 @@
                     </button>
 
                     <!-- Divider -->
+                    @auth
                     <div class="h-6 w-px bg-gray-200 dark:bg-slate-700"></div>
 
                     <!-- Dropdown Profil -->
@@ -152,6 +160,7 @@
                             </form>
                         </div>
                     </div>
+                    @endauth
                 </div>
             </header>
 
@@ -166,6 +175,10 @@
     <script>
         document.body.addEventListener('htmx:configRequest', (event) => {
             event.detail.headers['X-CSRF-Token'] = '{{ csrf_token() }}';
+        });
+
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').content;
         });
     </script>
 </body>

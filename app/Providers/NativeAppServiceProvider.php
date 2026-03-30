@@ -2,11 +2,10 @@
 
 namespace App\Providers;
 
-use Native\Desktop\Events\Notifications\NotificationActionClicked;
-use Native\Desktop\Events\Notifications\NotificationClicked;
-use Illuminate\Support\Facades\Event;
 
 // use Native\Desktop\Facades\MenuBar;
+// use Native\Desktop\Facades\Menu;
+// use Native\Desktop\Menu\Items\MenuItem;
 use Native\Desktop\Facades\Window;
 use Native\Desktop\Contracts\ProvidesPhpIni;
 
@@ -22,6 +21,14 @@ class NativeAppServiceProvider implements ProvidesPhpIni
     public function boot(): void
     {
         // MenuBar::create()->route('notification.detail');
+
+        // Menu::create(
+        //     Menu::app(),    // Khusus macOS
+        //     Menu::file(),
+        //     Menu::edit(),
+        //     Menu::view(),
+        //     Menu::window()
+        // );
 
         // Window::open();
         Window::open()

@@ -4,15 +4,8 @@
 namespace App\Http\Controllers;
 
 
-use Native\Desktop\Events\Notifications\NotificationActionClicked;
-use Native\Desktop\Facades\Window;
-
-use Native\Desktop\Events\Notifications\NotificationClicked;
 use Native\Desktop\Facades\Notification;
-
 use Illuminate\Support\Facades\Event;
-
-
 use Illuminate\Support\Str;
 
 class NativeController extends Controller
@@ -27,6 +20,6 @@ class NativeController extends Controller
             ->reference($dataId)
             ->show();
 
-        return "<span>✅ Notifikasi terkirim dan siap diklik!</span>";
+        return "<span>✅ klik Notifikasi untuk melihat detail!</span>";
     }
 }
