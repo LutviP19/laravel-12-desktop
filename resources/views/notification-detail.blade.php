@@ -1,6 +1,7 @@
-<!-- HTMX -->
-<script src="{{ asset('assets/js/htmx.min.js') }}"></script>
+@extends('layouts.app')
+@section('title', 'Detail Notifikasi')
 
+@section('content')
 <div class="p-6">
     <h1 class="text-2xl font-bold">Detail Notifikasi</h1>
 
@@ -22,3 +23,4 @@
         Kembali ke Dashboard
     </a>
 </div>
+@endsection

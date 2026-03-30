@@ -22,8 +22,6 @@ class NativeController extends Controller
     {
         // Memanggil API Native untuk menampilkan notifikasi OS
         $dataId = Str::uuid(); // Contoh data
-        // Simpan data sementara (misal: selama 1 menit)
-        cache()->put('last_notif_id', $dataId, 60);
         Notification::title('Update Baru')
             ->message('Klik untuk melihat detail data #'.$dataId)
             ->reference($dataId)

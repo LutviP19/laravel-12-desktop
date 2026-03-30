@@ -11,15 +11,14 @@ class HandleNotificationClick
     // Handle event NotificationClicked
     public function handle(NotificationClicked $event)
     {
-        // Ambil UUID dari cache yang disimpan saat kirim notifikasi
-        $id = $event->reference ?? cache()->get('last_notif_id');
-        $targetUrl = url('/notification-detail');
+        // Ambil UUID dari reference saat kirim notifikasi
+        $id = $event->reference;
+        $targetUrl = route('notification.detail', ['id' => $id]);
 
         // Example: Log the action
-        Log::info('NotificationClicked clicked on ID: ' . $id);
+        Log::debug('NotificationClicked clicked on ID: ' . $id);
 
         // Perintahkan Window 'main' untuk memuat URL tersebut
-        Window::get('main')
-            ->url($targetUrl);
+        Window::get('main')->url($targetUrl);
     }
 }
