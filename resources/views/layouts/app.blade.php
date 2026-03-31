@@ -33,6 +33,7 @@
     </style>
 <body 
     hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}' 
+    hx-history="true" 
     class="bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
 
     <div class="flex h-screen" x-data="{ sidebarOpen: true }">
