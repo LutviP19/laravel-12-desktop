@@ -40,6 +40,7 @@ Route::get('/notification-partial', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/chart-data', [ChartController::class, 'getChartData']);
 
+    // TodoController
     Route::get('/todos', [TodoController::class, 'index'])->name('todos.index');
     Route::post('/todos', [TodoController::class, 'store']);
     Route::patch('/todos/{todo}/toggle', [TodoController::class, 'toggle']);
