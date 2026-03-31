@@ -25,19 +25,22 @@ Route::get('/notification-detail/{id}', function (Request $request, string $id) 
 Route::get('/notification-detail', function () {
     return view('notification-detail');
 })->name('notification');
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
 
-// Partials - HTMX
-Route::get('/dashboard-partial', function () {
-    return view('partials.dashboard');
-})->name('dashboard.partial');
-Route::get('/notification-partial', function () {
-    return view('partials.notification');
-})->name('notification.partial');
+// Auth middleware 'auth', 
+Route::middleware(['htmx.auth'])->group(function () {
 
-Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    // Partials - HTMX
+    Route::get('/dashboard-partial', function () {
+        return view('partials.dashboard');
+    })->name('dashboard.partial');
+    Route::get('/notification-partial', function () {
+        return view('partials.notification');
+    })->name('notification.partial');
+
     Route::get('/api/chart-data', [ChartController::class, 'getChartData']);
 
     // TodoController

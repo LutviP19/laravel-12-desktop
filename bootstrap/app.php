@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\ForceRedirect::class,
         ]);
+        // Alias
+        $middleware->alias([
+            'htmx.auth' => \App\Http\Middleware\HtmxAuthenticate::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
