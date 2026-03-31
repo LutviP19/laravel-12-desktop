@@ -26,6 +26,8 @@
 
 Dev Mode:
 ---------
+/usr/bin/php artisan native:migrate
+
 /usr/bin/php artisan native:serve
 
 npm run dev

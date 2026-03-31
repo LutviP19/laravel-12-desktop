@@ -11,6 +11,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Native App - @yield('title', 'Dashboard')</title>
 
+    <!-- htmx (Navigasi & Update Partial) -->
+    <script src="{{ asset('assets/js/htmx.min.js') }}"></script>
+    
     <!-- Tailwind CSS -->
     <script src="{{ asset('assets/js/tailwindcss.js') }}"></script>
     <script>
@@ -20,18 +23,13 @@
         }
     </script>
 
-    <!-- Alpine.js (Logic UI Frontend) -->
-    <script defer src="{{ asset('assets/js/alpine.min.js') }}"></script>
-
-    <!-- htmx (Navigasi & Update Partial) -->
-    <script src="{{ asset('assets/js/htmx.min.js') }}"></script>
-    
     <style>
         [x-cloak] { display: none !important; }
         .htmx-indicator { opacity: 0; transition: opacity 200ms ease-in; }
         .htmx-request .htmx-indicator { opacity: 1; }
         .htmx-request.htmx-indicator { opacity: 1; }
     </style>
+</head>
 <body 
     hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}' 
     hx-history="true" 
@@ -226,5 +224,8 @@
             }
         });
     </script>
+
+    <!-- Alpine.js (Logic UI Frontend) -->
+    <script defer src="{{ asset('assets/js/alpine.min.js') }}"></script>
 </body>
 </html>
