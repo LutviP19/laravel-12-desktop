@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NativeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TodoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,3 +35,10 @@ Route::get('/dashboard-partial', function () {
 Route::get('/notification-partial', function () {
     return view('partials.notification');
 })->name('notification.partial');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/todos', [TodoController::class, 'index'])->name('todos.index');
+    Route::post('/todos', [TodoController::class, 'store']);
+    Route::patch('/todos/{todo}/toggle', [TodoController::class, 'toggle']);
+    Route::delete('/todos/{todo}', [TodoController::class, 'destroy']);
+});

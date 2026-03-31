@@ -27,6 +27,7 @@
     <script src="{{ asset('assets/js/htmx.min.js') }}"></script>
     
     <style>
+        [x-cloak] { display: none !important; }
         .htmx-indicator { opacity: 0; transition: opacity 200ms ease-in; }
         .htmx-request .htmx-indicator { opacity: 1; }
         .htmx-request.htmx-indicator { opacity: 1; }
@@ -172,14 +173,57 @@
         </main>
     </div>
 
+
+    <!-- Modal Confirm Global -->
+    <div x-data="{ 
+            open: false, 
+            title: '', 
+            message: '', 
+            targetEl: null,
+            confirmAction() {
+                if(this.targetEl) {
+                    // Memicu htmx untuk melanjutkan request setelah konfirmasi
+                    htmx.trigger(this.targetEl, 'confirmed');
+                }
+                this.open = false;
+            }
+        }" 
+        @open-confirm.window="open = true; title = $event.detail.title; message = $event.detail.message; targetEl = $event.detail.target"
+        x-show="open" 
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+        x-cloak>
+        
+        <div @click.away="open = false" 
+            x-show="open"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 p-6">
+            
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white" x-text="title"></h3>
+            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400" x-text="message"></p>
+
+            <div class="mt-6 flex justify-end gap-3">
+                <button @click="open = false" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition">
+                    Batal
+                </button>
+                <button @click="confirmAction()" class="px-4 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-lg shadow-red-200 dark:shadow-none transition">
+                    Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script HTMX Global untuk CSRF & Progress Bar -->
     <script>
         document.body.addEventListener('htmx:configRequest', (event) => {
-            event.detail.headers['X-CSRF-Token'] = '{{ csrf_token() }}';
-        });
-
-        document.body.addEventListener('htmx:configRequest', (event) => {
-            event.detail.headers['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').content;
+            // Ambil token dari meta tag atau input hidden
+            const token = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (token) {
+                event.detail.headers['X-CSRF-Token'] = token;
+            } else {
+                event.detail.headers['X-CSRF-Token'] = '{{ csrf_token() }}';
+            }
         });
     </script>
 </body>
