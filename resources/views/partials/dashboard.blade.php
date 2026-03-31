@@ -63,6 +63,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 p-8 shadow-sm text-center"><h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">Aksi Cepat Desktop</h3><p class="text-slate-500 dark:text-slate-400 mb-6 text-sm">Picu fungsi native sistem operasi langsung dari Laravel.</p><div class="flex flex-wrap justify-center gap-4"><button hx-post="/notify" hx-target="#notif-status" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-6 py-2.5 rounded-xl font-semibold transition shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900">Kirim Notifikasi</button><button hx-get="/tasks" class="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 active:scale-95 text-slate-700 dark:text-slate-200 px-6 py-2.5 rounded-xl font-semibold transition focus:outline-none">Lihat Semua Tugas</button></div><div id="notif-status" class="mt-4 text-xs font-mono text-blue-500 italic uppercase tracking-widest"></div></div>
 </div>
 
+@push('scripts')
 <!-- ApexCharts.js (Library Chart) -->
 <script defer src="{{ asset('assets/js/apexcharts.js') }}"></script>
 <script>
@@ -73,6 +74,12 @@
             isDark: document.documentElement.classList.contains('dark'),
 
             initChart() {
+                // Cari lib ApexCharts
+                if (typeof ApexCharts === 'undefined') {
+                    setTimeout(() => this.initChart(), 500);
+                    return;
+                }
+
                 // Hancurkan instance lama jika ada untuk mencegah memory leak di desktop app
                 if (this.chart) { this.chart.destroy(); }
 
@@ -141,31 +148,31 @@
                 // this.fetchData();
             },
 
-            fetchData() {
-                // Gunakan htmx.ajax untuk menarik data awal
-                // Kita ambil value dari input hidden 'days' (default 7)
-                const daysValue = document.getElementById('chart-days-input')?.value || '7';
+            // fetchData() {
+            //     // Gunakan htmx.ajax untuk menarik data awal
+            //     // Kita ambil value dari input hidden 'days' (default 7)
+            //     const daysValue = document.getElementById('chart-days-input')?.value || '7';
                 
-                htmx.ajax('GET', '/api/chart-data', {
-                    values: { days: daysValue },
-                    indicator: '#chart-loader',
-                    swap: 'none',
-                    // Handler manual jika ingin langsung diproses di sini
-                    handler: (elt, config) => {
-                        // config.xhr berisi objek XMLHttpRequest asli
-                        // Kita perlu menunggu sampai statusnya 4 (Done)
-                        config.xhr.addEventListener('load', () => {
-                            if (config.xhr.status >= 200 && config.xhr.status < 300) {
-                                const responseData = JSON.parse(config.xhr.responseText);
-                                console.log("Data diterima:", responseData);
+            //     htmx.ajax('GET', '/api/chart-data', {
+            //         values: { days: daysValue },
+            //         indicator: '#chart-loader',
+            //         swap: 'none',
+            //         // Handler manual jika ingin langsung diproses di sini
+            //         handler: (elt, config) => {
+            //             // config.xhr berisi objek XMLHttpRequest asli
+            //             // Kita perlu menunggu sampai statusnya 4 (Done)
+            //             config.xhr.addEventListener('load', () => {
+            //                 if (config.xhr.status >= 200 && config.xhr.status < 300) {
+            //                     const responseData = JSON.parse(config.xhr.responseText);
+            //                     console.log("Data diterima:", responseData);
                                 
-                                // Panggil fungsi update chart
-                                this.updateChartManual(responseData);
-                            }
-                        });
-                    }
-                });
-            },
+            //                     // Panggil fungsi update chart
+            //                     this.updateChartManual(responseData);
+            //                 }
+            //             });
+            //         }
+            //     });
+            // },
 
             updateChartFromResponse(event) {
                 if (event.detail.successful) {
@@ -201,3 +208,4 @@
         }
     }
 </script>
+@endpush

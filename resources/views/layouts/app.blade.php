@@ -13,7 +13,7 @@
 
     <!-- htmx (Navigasi & Update Partial) -->
     <script src="{{ asset('assets/js/htmx.min.js') }}"></script>
-    
+
     <!-- Tailwind CSS -->
     <script src="{{ asset('assets/js/tailwindcss.js') }}"></script>
     <script>
@@ -224,6 +224,8 @@
             }
         });
     </script>
+
+    @stack('scripts')
 
     <!-- Alpine.js (Logic UI Frontend) -->
     <script defer src="{{ asset('assets/js/alpine.min.js') }}"></script>
