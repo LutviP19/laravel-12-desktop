@@ -201,21 +201,23 @@
             },
             
             init() {
-                document.addEventListener('showToast', (event) => {
-                    this.showAlert(event.detail.value, 'success');
-                });
-
                 // Tangkap event sukses dari HTMX secara global
-                document.addEventListener('htmx:afterOnLoad', (event) => {
-                    // Cek jika request bukan GET (berarti manipulasi data: POST/PATCH/DELETE)
-                    // dan statusnya sukses (200-299)
-                    const method = event.detail.xhr.method.toUpperCase();
-                    if (method !== 'GET' && event.detail.xhr.status >= 200 && event.detail.xhr.status < 300) {
+                document.addEventListener('htmx:afterRequest', (event) => {
+                    const xhr = event.detail.xhr;
+                    const method = event.detail.requestConfig.method.toUpperCase();
+                    
+                    // Jika sukses (200-299) dan bukan GET
+                    if (xhr.status >= 200 && xhr.status < 300 && method !== 'GET') {
                         this.showAlert('Data berhasil diperbarui', 'success');
                     }
                 });
 
-                // 1. Monitor Koneksi Browser
+                // Listener Manual (Trigger dari Controller)
+                document.addEventListener('showToast', (event) => {
+                    this.showAlert(event.detail.value || 'Berhasil!', 'success');
+                });
+
+                // Monitor Koneksi Browser
                 window.addEventListener('online', () => { 
                     this.showAlert('Kembali Online', 'online');
                 });
@@ -224,7 +226,7 @@
                     this.showAlert('Koneksi Terputus', 'offline');
                 });
 
-                // 2. Monitor Error Server (HTMX)
+                // Monitor Error Server (HTMX)
                 document.addEventListener('htmx:sendError', () => {
                     this.showAlert('Server Tidak Terjangkau', 'server_error');
                 });
@@ -254,19 +256,19 @@
         <div :class="{
                 'bg-red-600 shadow-red-200/50': status === 'offline',
                 'bg-amber-600 shadow-amber-200/50': status === 'server_error',
-                'bg-emerald-600 shadow-emerald-200/50': status === 'online'
+                'bg-emerald-600 shadow-emerald-200/50': status === 'online' || status === 'success'
             }"
             class="flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl text-white border border-white/10 backdrop-blur-md transition-colors duration-500">
             
             <div class="flex-shrink-0">
                 <template x-if="status === 'offline'"><svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0-12.728L5.636 18.364m12.728-12.728L5.636 5.636m12.728 12.728L5.636 18.364" /></svg></template>
                 <template x-if="status === 'server_error'"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></template>
-                <template x-if="status === 'online'"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg></template>
+                <template x-if="status === 'online' || status === 'success'"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg></template>
             </div>
 
             <div class="flex-1">
                 <p class="text-xs font-bold uppercase tracking-widest" x-text="message"></p>
-                <p class="text-[10px] opacity-80" x-text="status === 'offline' ? 'Periksa kabel LAN atau Wi-Fi Anda.' : (status === 'server_error' ? 'PHP Server mati atau tidak merespon.' : 'Koneksi jaringan sudah normal kembali.')"></p>
+                <p class="text-[10px] opacity-80" x-text="status === 'offline' ? 'Periksa kabel LAN atau Wi-Fi Anda.' : (status === 'server_error' ? 'PHP Server mati atau tidak merespon.' : (status === 'success' ? 'Aksi berhasil dilakukan.' : 'Koneksi jaringan sudah normal kembali.'))"></p>
             </div>
 
             <button @click="show = false" class="p-1 hover:bg-white/20 rounded-lg">

@@ -49,7 +49,7 @@ class TodoController extends Controller
     public function renderList() 
     {
         $todos = $this->getTodoQuery()->paginate($this->perpage)->withPath('/todos');
-        return view('todos.todo-list-items', compact('todos'));
+        return response(view('todos.todo-list-items', compact('todos')));
     }
 
     public function store(Request $request) 
@@ -76,7 +76,9 @@ class TodoController extends Controller
             ));
 
             // Render ulang list (kembali ke page 1 agar tugas baru terlihat)
-            return $this->renderList();
+            return $this->renderList()->withHeaders([
+                'HX-Trigger' => json_encode(['showToast' => 'Data berhasil ditambah'])
+            ]);
             
         } catch (ValidationException $e) {
             $errorMsg = $e->validator->errors()->first();
@@ -99,7 +101,9 @@ class TodoController extends Controller
         
         // Setelah toggle, kita reset list ke Page 1 
         // karena posisi sorting (is_completed) pasti berubah
-        return $this->renderList();
+        return $this->renderList()->withHeaders([
+            'HX-Trigger' => json_encode(['showToast' => 'Data berhasil diupdate'])
+        ]);
     }
 
     public function destroy(Todo $todo) 
@@ -107,6 +111,8 @@ class TodoController extends Controller
         $todo->delete();
         
         // Kembali ke list page 1
-        return $this->renderList();
+        return $this->renderList()->withHeaders([
+            'HX-Trigger' => json_encode(['showToast' => 'Data berhasil dihapus'])
+        ]);
     }
 }
