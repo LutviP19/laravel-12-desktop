@@ -38,8 +38,8 @@ class NativeAppServiceProvider implements ProvidesPhpIni
         // Membuat struktur menu sesuai standar dokumentasi terbaru
         Menu::create(
             $menu,
-            // Menu Edit Standar (Copy, Paste, dsb)
-            Menu::edit(),
+            // // Menu Edit Standar (Copy, Paste, dsb)
+            // Menu::edit(),
             // Menu View & Window Standar
             Menu::view(),
             Menu::window()
