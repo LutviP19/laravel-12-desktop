@@ -13,8 +13,9 @@
             <!-- Konten error dari server akan masuk ke sini -->
         </div>
 
-        <form  id="csrf-holder" 
+        <form 
             hx-post="/todos" 
+            hx-include="#csrf-holder [name=_token]" 
             x-data="{ 
                 target: '#todo-list',
                 checkTarget(el) {
@@ -48,8 +49,6 @@
             "
             @input="error = false; document.getElementById('todo-error').innerHTML = ''" 
             class="space-y-4">
-
-            @csrf
             
             <div class="flex gap-3">
                 <input type="text" name="title" placeholder="Tulis tugas baru..."

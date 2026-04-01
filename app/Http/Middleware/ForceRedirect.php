@@ -16,14 +16,22 @@ class ForceRedirect
         if (!$request->header('HX-Request')) {
             $currentPath = $request->path();
             $authPaths = ['login', 'register', 'logout', '/'];
-            $isNotificationPath = $request->is('notification-detail/*');
+            $isNotificationPath = $request->is('notification-detail-public/*');
 
             if($isNotificationPath) {
                 return $next($request);
             }
 
+            if (Auth::check() && $request->routeIs('home')) {
+                return $next($request);
+            }
+
             if (Auth::check() && $currentPath !== 'dashboard') {
                 return redirect('/dashboard');
+            }
+
+            if (!Auth::check() &&  $request->routeIs('dashboard')) {
+                return redirect('/login');
             }
 
             if (!Auth::check() && !in_array($currentPath, $authPaths)) {

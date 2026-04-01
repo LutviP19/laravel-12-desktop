@@ -3,6 +3,7 @@
 // app/Http/Controllers/TodoController.php
 namespace App\Http\Controllers;
 
+use App\Notifications\DesktopNotification;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Native\Desktop\Facades\Notification;
@@ -65,6 +66,14 @@ class TodoController extends Controller
             Notification::title('Tugas Baru')
                 ->message("Tugas '{$todo->title}' berhasil ditambahkan!")
                 ->show();
+
+            // Simpan Notification ke tabel
+            $user = auth()->user();
+            // Ini akan menyimpan ke DB DAN memunculkan popup desktop secara otomatis
+            $user->notify(new DesktopNotification(
+                "Tugas Baru: {$request->title}", 
+                "Kategori: {$request->category}"
+            ));
 
             // Render ulang list (kembali ke page 1 agar tugas baru terlihat)
             return $this->renderList();

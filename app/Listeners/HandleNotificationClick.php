@@ -13,9 +13,11 @@ class HandleNotificationClick
     {
         // Ambil UUID dari reference saat kirim notifikasi
         $id = $event->reference;
-        $targetUrl = route('notification.detail', ['id' => $id]);
+        $targetUrl = route('notification.public', ['id' => $id]);
+        // $targetUrl = "/notification-detail-public/" . $id;
 
         // Example: Log the action
+        Log::debug('Redirecting to Path: ' . $targetUrl);
         Log::debug('NotificationClicked clicked on ID: ' . $id);
 
         // Perintahkan Window 'main' untuk memuat URL tersebut

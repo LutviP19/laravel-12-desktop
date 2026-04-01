@@ -6,6 +6,8 @@ namespace App\Providers;
 // use Native\Desktop\Facades\MenuBar;
 // use Native\Desktop\Facades\Menu;
 // use Native\Desktop\Menu\Items\MenuItem;
+
+use Native\Desktop\Facades\Menu;
 use Native\Desktop\Facades\Window;
 use Native\Desktop\Contracts\ProvidesPhpIni;
 
@@ -22,18 +24,31 @@ class NativeAppServiceProvider implements ProvidesPhpIni
     {
         // MenuBar::create()->route('notification.detail');
 
-        // Menu::create(
-        //     Menu::app(),    // Khusus macOS
-        //     Menu::file(),
-        //     Menu::edit(),
-        //     Menu::view(),
-        //     Menu::window()
-        // );
+        // Menu::default();
+
+        // Menu Navigasi Kustom
+        $menu = Menu::make(
+                        Menu::link(route('home'), 'Home', 'CmdOrCtrl+H'),
+                        Menu::separator(),
+                        Menu::link(route('dashboard'), 'Dashboard', 'CmdOrCtrl+D'),
+                        Menu::separator(),
+                        Menu::quit()->label('Quit')
+                )->label('Laravel 12');
+
+        // Membuat struktur menu sesuai standar dokumentasi terbaru
+        Menu::create(
+            $menu,
+            // Menu Edit Standar (Copy, Paste, dsb)
+            Menu::edit(),
+            // Menu View & Window Standar
+            Menu::view(),
+            Menu::window()
+        );
 
         // Window::open();
-        Window::open()
+        Window::open('main')
                 ->title(config('app.name'))
-                // ->url(route('notification.detail'))
+                // ->url(route('notification'))
                 ->showDevTools(false)
                 ->rememberState();
 

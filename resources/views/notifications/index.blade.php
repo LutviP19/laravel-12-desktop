@@ -2,5 +2,5 @@
 @section('title', 'Detail Notifikasi')
 
 @section('content')
-    @include('partials.notification')
+    @include('notifications._list')
 @endsection
