@@ -18,49 +18,32 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
-// Native PHP
+// Native PHP test kirim Notifikasi manual
 Route::post('/notify', [NativeController::class, 'sendNotification']);
-
-// Route::get('/notification-detail-public/{id}', function (Request $request, string $id) {
-//     return view('notification-detail', ['id' => $id]);
-//     // return view('notifications.detail.full', ['id' => $id]);
-// })->name('notification.public');
-// Route::get('/notification-detail-public', function () {
-//     return view('notification-detail');
-// })->name('notification');
-
 
 // Rute Publik untuk Detail Notifikasi (Akses dari Klik Desktop)
 Route::get('/notification-detail-public/{id}', function (Illuminate\Http\Request $request, string $id) {
-    
-    // Cari notifikasi berdasarkan UUID
-    // Kita gunakan model DatabaseNotification agar bisa mencari tanpa harus 'auth' dulu jika perlu
     $notification = \Illuminate\Notifications\DatabaseNotification::find($id);
-
-    // Jika user sedang login, tandai sebagai sudah dibaca
     if (auth()->check() && $notification) {
         $notification->markAsRead();
     }
 
     return view('notification-detail', [
         'id' => $id,
-        'notification' => $notification // Kirim objek notification ke view
+        'notification' => $notification
     ]);
 })->name('notification.public');
-
-// Fallback jika tidak ada ID
 Route::get('/notification-detail-public', function () {
     return view('notification-detail');
 })->name('notification');
 
 // Auth middleware 'auth', 
 Route::middleware(['htmx.auth'])->group(function () {
-
+    // Main Dashboard
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    
     // Partials - HTMX
     Route::get('/dashboard-partial', function () {
         return view('partials.dashboard');
@@ -75,7 +58,6 @@ Route::middleware(['htmx.auth'])->group(function () {
     Route::patch('/todos/{todo}/toggle', [TodoController::class, 'toggle']);
     Route::delete('/todos/{todo}', [TodoController::class, 'destroy']);
 
-
     // Notification Module
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
@@ -86,9 +68,5 @@ Route::middleware(['htmx.auth'])->group(function () {
         
         return view('notifications.detail', compact('notification'));
     })->name('notification.detail');
-
-    // Route::get('/notification-detail', function () {
-    //     return view('notifications.index'); // Arahkan ke list saja jika ID tidak ada
-    // })->name('notification');
 
 });
