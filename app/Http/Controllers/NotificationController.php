@@ -14,7 +14,7 @@ class NotificationController extends Controller
         $notifications = auth()->user()->notifications()
             ->latest()
             ->paginate($this->perPage)
-            ->withPath('/notification-partial'); // Konsisten dengan route HTMX
+            ->withPath('/notification-partial');
 
         if ($request->header('HX-Request')) {
             return view('notifications._list', compact('notifications'));
@@ -28,14 +28,14 @@ class NotificationController extends Controller
         $notification = auth()->user()->notifications()->findOrFail($id);
         $notification->markAsRead();
 
-        return $this->index(request()); // Gunakan index() agar logic pagination sama
+        return $this->index(request());
     }
 
     public function destroy($id)
     {
         auth()->user()->notifications()->findOrFail($id)->delete();
         
-        return $this->index(request())->withHeaders([
+        return response($this->index(request()))->withHeaders([
             'HX-Trigger' => json_encode(['showToast' => 'Notifikasi berhasil dihapus'])
         ]);
     }
