@@ -24,14 +24,33 @@
         },
         
         init() {
-            // Tangkap event sukses dari HTMX secara global
+            // 1. Pastikan HTMX tetap menukar (swap) konten saat error 422 agar pesan muncul di form
+            document.addEventListener('htmx:beforeOnLoad', (event) => {
+                if (event.detail.xhr.status === 422) {
+                    event.detail.shouldSwap = true;
+                    event.detail.isError = false;
+                }
+            });
+
+            // 2. Handler Toast (Hanya untuk Sukses)
             document.addEventListener('htmx:afterRequest', (event) => {
                 const xhr = event.detail.xhr;
-                const method = event.detail.requestConfig.method.toUpperCase();
-                
-                // Jika sukses (200-299) dan bukan GET
-                if (xhr.status >= 200 && xhr.status < 300 && method !== 'GET') {
+                const method = (event.detail.requestConfig?.method || '').toUpperCase();
+
+                // Abaikan GET request
+                if (method === 'GET' || method === '') return;
+
+                // HANYA munculkan Toast jika status sukses (200-299)
+                if (xhr.status >= 200 && xhr.status < 300) {
                     this.showAlert('Data berhasil diperbarui', 'success');
+                } 
+                
+                // Status 422 diabaikan di sini (Tidak ada this.showAlert)
+                // Pesan error otomatis muncul di target #profile-status lewat htmx:beforeOnLoad di atas
+                
+                // Opsional: Tetap munculkan Toast jika error berat (Server Error 500)
+                else if (xhr.status >= 500) {
+                    this.showAlert('Terjadi kesalahan server', 'danger');
                 }
             });
 
@@ -91,7 +110,14 @@
 
         <div class="flex-1">
             <p class="text-xs font-bold uppercase tracking-widest" x-text="message"></p>
-            <p class="text-[10px] opacity-80" x-text="status === 'offline' ? 'Periksa kabel LAN atau Wi-Fi Anda.' : (status === 'server_error' ? 'PHP Server mati atau tidak merespon.' : (status === 'success' ? 'Aksi berhasil dilakukan.' : 'Koneksi jaringan sudah normal kembali.'))"></p>
+            <p class="text-[10px] opacity-80" 
+            x-text="{
+                    'offline': 'Periksa kabel LAN atau Wi-Fi Anda.',
+                    'server_error': 'PHP Server mati atau tidak merespon.',
+                    'success': 'Aksi berhasil dilakukan.',
+                    'online': 'Koneksi jaringan sudah normal kembali.'
+                }[status] || 'Memproses permintaan...'"
+            ></p>
         </div>
 
         <button @click="show = false" class="p-1 hover:bg-white/20 rounded-lg">

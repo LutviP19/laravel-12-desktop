@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 use App\Notifications\DesktopNotification;
 use App\Models\Todo;
 use Illuminate\Http\Request;
-use Native\Desktop\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
 class TodoController extends Controller
@@ -62,10 +61,6 @@ class TodoController extends Controller
             ]);
 
             $todo = auth()->user()->todos()->create($validated);
-
-            // Notification::title('Tugas Baru')
-            //     ->message("Tugas '{$todo->title}' berhasil ditambahkan!")
-            //     ->show();
 
             // Simpan Notification ke tabel
             $user = auth()->user();

@@ -194,6 +194,24 @@
                 event.detail.headers['X-CSRF-Token'] = '{{ csrf_token() }}';
             }
         });
+
+        // Listener untuk menangani redirect dengan jeda waktu
+        window.addEventListener('delayedRedirect', (event) => {
+            const url = event.detail.url;
+            const delay = event.detail.ms || 2000; // default 2 detik jika tidak diatur
+
+            if (url) {
+                setTimeout(() => {
+                    // Jika menggunakan HTMX untuk pindah halaman agar lebih ringan
+                    if (typeof htmx !== 'undefined') {
+                        htmx.ajax('GET', url, { target: 'body', pushUrl: true });
+                    } else {
+                        // Fallback ke redirect browser biasa
+                        window.location.href = url;
+                    }
+                }, delay);
+            }
+        });
     </script>
 
     @stack('scripts')
