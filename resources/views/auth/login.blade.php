@@ -18,6 +18,21 @@
                     class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
 
+            <div class="flex items-center justify-between">
+                <label class="flex items-center cursor-pointer group">
+                    <div class="relative">
+                        <input type="checkbox" name="remember" class="sr-only">
+                        <div class="w-10 h-5 bg-slate-200 dark:bg-slate-700 rounded-full shadow-inner transition-colors group-has-[:checked]:bg-blue-500"></div>
+                        <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform group-has-[:checked]:translate-x-5 shadow-sm"></div>
+                    </div>
+                    <span class="ml-3 text-xs font-medium text-slate-600 dark:text-slate-400 select-none">Ingat Saya</span>
+                </label>
+                
+                <a href="{{ route('password.request') }}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+                    Lupa Password?
+                </a>
+            </div>
+
             <div id="login-error" class="text-sm"></div>
 
             <button type="submit" 

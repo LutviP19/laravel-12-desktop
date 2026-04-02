@@ -1,7 +1,13 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NativeController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\NotificationController;
@@ -10,6 +16,22 @@ use App\Http\Controllers\ChartController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// Form minta link (Lupa Password)
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
+
+// Proses kirim email
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+
+// Form reset password (dari email)
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+// Proses update password baru
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 // Auth
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -39,6 +61,10 @@ Route::get('/notification-detail-public', function () {
 
 // Auth middleware 'auth', 
 Route::middleware(['htmx.auth'])->group(function () {
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     // Main Dashboard
     Route::get('/dashboard', function () {
         return view('dashboard');

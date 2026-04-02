@@ -12,30 +12,56 @@ class ForceRedirect
 {
     public function handle(Request $request, Closure $next)
     {
-        // Jika user me-refresh halaman (bukan request htmx)
-        if (!$request->header('HX-Request')) {
-            $currentPath = $request->path();
-            $authPaths = ['login', 'register', 'logout', '/'];
-            $isNotificationPath = $request->is('notification-detail-public/*');
+        // 1. Biarkan request HTMX lewat tanpa gangguan
+        if ($request->header('HX-Request')) {
+            return $next($request);
+        }
 
-            if($isNotificationPath) {
+        // 2. Daftar pengecualian (Public Paths & Patterns)
+        // Gunakan pattern '*' agar lebih dinamis untuk ID atau sub-path
+        $excludedPatterns = [
+            'notification-detail-public/*',
+            'reset-password/*',
+            'profile*',
+        ];
+
+        // 3. Daftar Route Names untuk Auth (Lebih aman daripada hardcoded path)
+        $authRoutes = [
+            'login', 
+            'register', 
+            'password.request', 
+            'password.email', 
+            'password.reset', 
+            'password.update',
+            'logout',
+        ];
+
+        // Jalankan pengecualian pattern
+        foreach ($excludedPatterns as $pattern) {
+            if ($request->is($pattern)) {
                 return $next($request);
             }
+        }
 
-            if (Auth::check() && $request->routeIs('home')) {
-                return $next($request);
+        // 4. Logika Pengalihan Dinamis
+        $isLoggedIn = Auth::check();
+        $isHome = $request->routeIs('home') || $request->path() === '/';
+
+        if ($isLoggedIn) {
+            // Jika sudah login tapi mencoba akses '/' atau route auth, lempar ke dashboard
+            if ($isHome || $request->routeIs($authRoutes)) {
+                return redirect()->route('dashboard');
             }
-
-            if (Auth::check() && $currentPath !== 'dashboard') {
-                return redirect('/dashboard');
+            
+            // Jika sudah login tapi mengakses path lain secara langsung (Full Reload), 
+            // tetap arahkan ke dashboard (pola SPA NativePHP)
+            if (!$request->routeIs('dashboard')) {
+                return redirect()->route('dashboard');
             }
-
-            if (!Auth::check() &&  $request->routeIs('dashboard')) {
-                return redirect('/login');
-            }
-
-            if (!Auth::check() && !in_array($currentPath, $authPaths)) {
-                return redirect('/');
+        } else {
+            // Jika BELUM login dan mencoba akses dashboard atau area terproteksi
+            if ($request->routeIs('dashboard') || !$request->routeIs($authRoutes) && !$isHome) {
+                return redirect()->route('login');
             }
         }
 

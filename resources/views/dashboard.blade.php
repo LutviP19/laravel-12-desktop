@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Dashboard Overview')
+@section('title', 'Dashboard')
 
 @section('content')
     @include('partials.dashboard')
