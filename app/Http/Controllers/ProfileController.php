@@ -23,7 +23,7 @@ class ProfileController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return view('profile.partials.form-error', ['errors' => $validator->errors()]);
+            return view('partials.form-error', ['errors' => $validator->errors()]);
         }
 
         $user->name = $request->name;
