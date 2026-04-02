@@ -20,6 +20,7 @@ class ForceRedirect
         // 2. Daftar pengecualian (Public Paths & Patterns)
         // Gunakan pattern '*' agar lebih dinamis untuk ID atau sub-path
         $excludedPatterns = [
+            '/',
             'notification-detail-public/*',
             'reset-password/*',
             'profile*',
