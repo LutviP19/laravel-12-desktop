@@ -30,6 +30,7 @@
         <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
             @if(!$noti->read_at)
                 <button hx-patch="/notifications/{{ $noti->id }}/read" 
+                        hx-include="#csrf-holder [name=_token]" 
                         hx-target="#main-content"
                         class="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
