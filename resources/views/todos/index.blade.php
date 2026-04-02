@@ -1,60 +1,72 @@
 <div class="max-w-2xl mx-auto space-y-6">
     
+            
     <!-- Container Utama dengan State Error -->
-    <div x-data="{ error: false }" 
+    <div x-data="{ 
+            error: false,
+            isSaving: false,
+            swapStrategy: 'innerHTML' {{-- Default swap untuk data baru --}}
+        }"
         class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 transition-all duration-300"
         :class="{ 'ring-2 ring-red-500/20 border-red-200 dark:border-red-900/50': error }">
         
         <!-- Area Placeholder Error -->
-        <div id="todo-error" 
-            :class="{ 'animate-pulse': error }" 
-            class="empty:hidden mb-4">
-            <!-- Konten error dari server akan masuk ke sini -->
+        <div id="todo-error" class="empty:hidden mb-4">
         </div>
 
         <form 
             hx-post="/todos" 
             hx-include="#csrf-holder [name=_token]" 
-            x-data="{ 
-                target: '#todo-list',
-                checkTarget(el) {
-                    const title = el.querySelector('input[name=title]').value;
-                    this.target = title.trim() === '' ? '#todo-error' : '#todo-list';
-                    this.error = (title.trim() === '');
+            hx-target="#todo-list" 
+            :hx-swap="swapStrategy" 
+            @htmx:before-request="
+                isSaving = true;
+                const title = $el.querySelector('input[name=title]').value;
+                if(title.trim() === '') {
+                    swapStrategy = 'afterbegin';
+                } else {
+                    swapStrategy = 'innerHTML';
                 }
-            }"
-            :hx-target="target"
-            @htmx:before-request="checkTarget($el)"
+            "
             @htmx:after-request="
-                this.error = !event.detail.successful; 
+                const status = event.detail.xhr.status;
+                isSaving = false;
                 
-                if (event.detail.successful) { 
-                    // SUKSES: Reset form & bersihkan pesan error
+                if (status === 200) {
+                    error = false;
                     $el.reset(); 
                     document.getElementById('todo-error').innerHTML = '';
-                    this.target = '#todo-list';
                 } else {
-                    // ERROR: Ambil response dari server (HTML error dari Controller)
-                    const responseHTML = event.detail.xhr.responseText;
-                    
-                    if (responseHTML) {
-                        // Masukkan response HTML (merah) dari Controller ke div error
-                        document.getElementById('todo-error').innerHTML = responseHTML;
-                    } else {
-                        // Fallback jika server tidak mengirimkan response (koneksi putus/crash)
-                        document.getElementById('todo-error').innerHTML = '<div class=\'p-3 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-xl text-xs border border-red-100 dark:border-red-800\'>Terjadi kesalahan sistem.</div>';
+                    error = true;
+                    // Jika bukan 422 (misal 500), isi manual karena mungkin server tidak kirim HTML OOB
+                    if (status !== 422) {
+                        document.getElementById('todo-error').innerHTML = '<div class=\'p-3 bg-red-50 text-red-600 rounded-xl text-xs border border-red-100\'>Gagal terhubung ke server.</div>';
                     }
                 }
             "
-            @input="error = false; document.getElementById('todo-error').innerHTML = ''" 
+            @input="
+                error = false; 
+                const errDiv = document.getElementById('todo-error');
+                errDiv.innerHTML = ''; 
+                errDiv.className = 'empty:hidden mb-0';
+            "
             class="space-y-4">
-            
+                
             <div class="flex gap-3">
-                <input type="text" name="title" placeholder="Tulis tugas baru..."
+                <input type="text" name="title" placeholder="Tulis tugas baru..." 
+                    :class="error ? 'border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-blue-200'" 
                     class="flex-1 flex items-center gap-3 px-4 py-2.5 bg-gray-100 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent focus:outline-none appearance-none">
                 
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-bold transition">
-                    Tambah
+                <button 
+                    type="submit" 
+                    :disabled="isSaving" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-bold transition" 
+                    :class="isSaving ? 'bg-slate-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'">
+                <svg x-show="isSaving" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span x-text="isSaving ? 'Proses...' : 'Tambah Tugas'"></span>
                 </button>
             </div>
 

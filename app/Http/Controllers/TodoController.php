@@ -87,6 +87,10 @@ class TodoController extends Controller
                 </div>";
 
             return response($html, 422);
+
+            // return response()->view('partials.form-error', [
+            //             'errors' => $e->validator->errors()
+            //         ], 422);
         }
     }
 
