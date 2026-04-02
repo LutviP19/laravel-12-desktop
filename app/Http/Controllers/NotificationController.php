@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    private $perPage = 10;
+    private $perPage = 7;
 
     public function index(Request $request)
     {
@@ -14,7 +14,7 @@ class NotificationController extends Controller
         $notifications = auth()->user()->notifications()
             ->latest()
             ->paginate($this->perPage)
-            ->withPath('/notification-partial');
+            ->withPath('/notifications');
 
         if ($request->header('HX-Request')) {
             return view('notifications._list', compact('notifications'));

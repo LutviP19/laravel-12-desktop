@@ -1,12 +1,5 @@
 @forelse($notifications as $noti)
     <div 
-        {{-- Logika Auto-Load saat Scroll (Revealed) --}}
-        @if ($loop->last && $notifications->hasMorePages())
-            hx-get="{{ $notifications->nextPageUrl() }}"
-            hx-trigger="revealed"
-            hx-swap="afterend"
-            hx-indicator="#noti-load-spinner"
-        @endif
         class="p-4 mb-2 rounded-xl border transition-all duration-300 flex justify-between items-center group
         {{ $noti->read_at ? 'bg-gray-50/50 dark:bg-slate-800/30 opacity-70 border-gray-100 dark:border-slate-800' : 'bg-white dark:bg-slate-900 border-blue-100 dark:border-blue-900/30 shadow-sm' }}">
         

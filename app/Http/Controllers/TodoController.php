@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 class TodoController extends Controller
 {
     // Pagination perpage
-    protected $perpage = 10;
+    protected $perpage = 7;
 
     /**
      * Helper untuk mengambil query dasar agar konsisten di semua method
@@ -63,9 +63,9 @@ class TodoController extends Controller
 
             $todo = auth()->user()->todos()->create($validated);
 
-            Notification::title('Tugas Baru')
-                ->message("Tugas '{$todo->title}' berhasil ditambahkan!")
-                ->show();
+            // Notification::title('Tugas Baru')
+            //     ->message("Tugas '{$todo->title}' berhasil ditambahkan!")
+            //     ->show();
 
             // Simpan Notification ke tabel
             $user = auth()->user();
