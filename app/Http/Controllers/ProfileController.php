@@ -33,7 +33,7 @@ class ProfileController extends Controller
 
         $user->name = $request->name;
         // $user->email = $request->email;
-        $user->name = $request->notification_expiry_days;
+        $user->notification_expiry_days = $request->notification_expiry_days;
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
