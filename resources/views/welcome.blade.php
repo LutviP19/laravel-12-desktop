@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-        x-data="{ 
-        darkMode: localStorage.getItem('darkMode') === 'true' || 
-                 (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) 
+      x-data="{ 
+        darkMode: (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)  || localStorage.getItem('darkMode') === 'null' || true
+      }" 
+      x-init="
+          // Simpan ke localStorage saat pertama kali load jika belum ada
+          if(localStorage.getItem('darkMode') === null) {
+              localStorage.setItem('darkMode', 'true');
+          }
+          // Watch perubahan jika ada toggle di masa depan
+          $watch('darkMode', val => localStorage.setItem('darkMode', val))
       }" 
       :class="{ 'dark': darkMode }">
     <head>
@@ -11,6 +18,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <script>
+            // Eksekusi instan sebelum render body
+            (function() {
+                const saved = localStorage.getItem('darkMode');
+                // Jika null (user baru), maka TRUE. Jika tidak, cek apakah stringnya 'true'.
+                const isDark = saved === null ? true : saved === 'true';
+                
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+        </script>
 
         <!-- HTMX -->
         <script src="{{ asset('assets/js/htmx.min.js') }}"></script>

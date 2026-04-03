@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="id" 
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" 
       x-data="{ 
-        darkMode: localStorage.getItem('darkMode') === 'true' || 
-                 (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) 
+        darkMode: (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) || localStorage.getItem('darkMode') === 'true' 
+      }" 
+      x-init="
+          $watch('darkMode', val => localStorage.setItem('darkMode', val))
       }" 
       :class="{ 'dark': darkMode }">
 <head>
@@ -15,6 +17,19 @@
     <script src="{{ asset('assets/js/htmx.min.js') }}"></script>
 
     <!-- Tailwind CSS -->
+     <script>
+        (function() {
+            // Logika: Jika null (default) maka true (dark)
+            const savedMode = localStorage.getItem('darkMode');
+            const isDark = savedMode === null ? true : savedMode === 'true';
+            
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     <script src="{{ asset('assets/js/tailwindcss.js') }}"></script>
     <script>
         // Inject config jika menggunakan Tailwind Play CDN/Standalone script
