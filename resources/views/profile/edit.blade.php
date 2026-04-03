@@ -26,7 +26,7 @@
                         <label class="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Nama Lengkap</label>
                         <input type="text" name="name" value="{{ $user->name }}" 
                             class="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 dark:text-white transition-all">
-                    </div>                    
+                    </div>
 
                     <div class="py-4">
                         <div class="h-px bg-slate-100 dark:bg-slate-800 w-full"></div>
@@ -70,6 +70,41 @@
                     </div>
 
                     <div id="profile-status"></div>
+                    
+                    <div class="py-4">
+                        <div class="h-px bg-slate-100 dark:bg-slate-800 w-full"></div>
+                    </div>
+
+                    <div class="space-y-3 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-800 transition-all hover:border-blue-500/30">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="p-2 bg-blue-500/10 rounded-xl">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <label class="text-sm font-black text-slate-700 dark:text-slate-200">Pembersihan Notifikasi Otomatis</label>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Hapus notifikasi lama untuk menghemat ruang penyimpanan.</p>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <select name="notification_expiry_days" 
+                                class="w-full px-5 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 dark:text-white transition-all appearance-none cursor-pointer">
+                                <option value="" {{ is_null($user->notification_expiry_days) ? 'selected' : '' }}>Jangan Pernah Hapus</option>
+                                <option value="3" {{ $user->notification_expiry_days == 3 ? 'selected' : '' }}>Hapus setelah 3 hari</option>
+                                <option value="7" {{ $user->notification_expiry_days == 7 ? 'selected' : '' }}>Hapus setelah 7 hari (Rekomendasi)</option>
+                                <option value="14" {{ $user->notification_expiry_days == 14 ? 'selected' : '' }}>Hapus setelah 14 hari</option>
+                                <option value="30" {{ $user->notification_expiry_days == 30 ? 'selected' : '' }}>Hapus setelah 30 hari</option>
+                            </select>
+                            
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="flex flex-col sm:flex-row gap-4 pt-4">
                         <a href="{{ route('dashboard') }}" 

@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 
-// use Native\Desktop\Facades\MenuBar;
-// use Native\Desktop\Facades\Menu;
-// use Native\Desktop\Menu\Items\MenuItem;
+use Native\Desktop\Facades\ChildProcess;
 
 use Native\Desktop\Facades\Menu;
 use Native\Desktop\Facades\Window;
@@ -52,6 +50,12 @@ class NativeAppServiceProvider implements ProvidesPhpIni
                 ->showDevTools(false)
                 ->rememberState();
 
+        // Menjalankan Laravel Scheduler sebagai background process di Desktop
+        // 'schedule:work' akan terus berjalan selama aplikasi terbuka
+        ChildProcess::artisan(
+            cmd: 'schedule:work',
+            alias: 'laravel-scheduler-bg'
+        );
     }
 
     /**

@@ -19,8 +19,9 @@ class ProfileController extends Controller
         $isPasswordChanged = $request->filled('password');
 
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'min:5', 'max:255'],
             // 'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'notification_expiry_days' => 'nullable|integer|in:3,7,14,30', // Validasi pilihan
             'password' => ['nullable', 'min:8', 'confirmed'],
         ]);
 
@@ -32,6 +33,7 @@ class ProfileController extends Controller
 
         $user->name = $request->name;
         // $user->email = $request->email;
+        $user->name = $request->notification_expiry_days;
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);

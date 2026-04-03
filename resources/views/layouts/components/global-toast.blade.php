@@ -12,15 +12,17 @@
             this.message = msg;
             this.show = true;
 
+            const showTime = stat === 'success' ? 3000 : 10000;
+
             // Bersihkan timer sebelumnya jika ada (reset timer)
             if (this.timer) clearTimeout(this.timer);
 
-            // Set timer baru untuk menutup setelah 10 detik (10000 ms)
+            // Set timer baru untuk menutup sesuai showTime
             // Khusus status 'offline', kita biarkan tetap muncul (optional) 
             // Tapi jika ingin semua auto-close, gunakan kode di bawah:
             this.timer = setTimeout(() => {
                 this.show = false;
-            }, 10000);
+            }, showTime);
         },
         
         init() {
