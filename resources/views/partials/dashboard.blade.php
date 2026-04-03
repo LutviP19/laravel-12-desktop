@@ -63,7 +63,7 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 p-8 shadow-sm text-center"><h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">Aksi Cepat Desktop</h3><p class="text-slate-500 dark:text-slate-400 mb-6 text-sm">Picu fungsi native sistem operasi langsung dari Laravel.</p><div class="flex flex-wrap justify-center gap-4"><button hx-post="/notify" hx-target="#notif-status" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-6 py-2.5 rounded-xl font-semibold transition shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900">Kirim Notifikasi</button><button hx-get="/tasks" class="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 active:scale-95 text-slate-700 dark:text-slate-200 px-6 py-2.5 rounded-xl font-semibold transition focus:outline-none">Lihat Semua Tugas</button></div><div id="notif-status" class="mt-4 text-xs font-mono text-blue-500 italic uppercase tracking-widest"></div></div>
 </div>
 
-@push('scripts')
+
 <!-- ApexCharts.js (Library Chart) -->
 <script defer src="{{ asset('assets/js/apexcharts.js') }}"></script>
 <script>
@@ -208,4 +208,3 @@
         }
     }
 </script>
-@endpush

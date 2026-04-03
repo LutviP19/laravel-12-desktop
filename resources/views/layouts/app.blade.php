@@ -198,6 +198,9 @@
     @include('layouts.components.global-modal-confirm')
     
 
+    <!-- Alpine.js (Logic UI Frontend) -->
+    <script defer src="{{ asset('assets/js/alpine.min.js') }}"></script>
+    
     <!-- Script HTMX Global untuk CSRF & Progress Bar -->
     <script>
         document.body.addEventListener('htmx:configRequest', (event) => {
@@ -314,7 +317,5 @@
 
     @stack('scripts')
 
-    <!-- Alpine.js (Logic UI Frontend) -->
-    <script defer src="{{ asset('assets/js/alpine.min.js') }}"></script>
 </body>
 </html>
