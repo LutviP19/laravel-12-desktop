@@ -60,16 +60,16 @@
         </div>
     </div>
     
-    {{-- LOGIK DEBUG: Munculkan tombol Load More hanya di item terakhir jika ada halaman selanjutnya --}}
+    
     @if ($loop->last && $todos->hasMorePages())
         <div id="load-more-container" class="py-6 flex justify-center">
             <button 
                 hx-get="{{ $todos->nextPageUrl() }}" 
                 hx-include="#csrf-holder [name=_token]" 
                 hx-target="#load-more-container" 
-                hx-swap="outerHTML"
+                hx-swap="outerHTML" 
                 {{-- hx-indicator akan membuat tombol ini transparan saat diklik --}}
-                hx-indicator="#load-more-spinner"
+                hx-indicator="#load-more-spinner" 
                 class="group flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white text-slate-600 dark:text-slate-400 text-xs font-bold rounded-2xl transition-all shadow-sm active:scale-95"
             >
                 <span>Tampilkan (Page {{ $todos->currentPage() + 1 }})</span>
