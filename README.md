@@ -1,16 +1,11 @@
-<div align="center" style="display: block; margin-bottom: 20px;">
-  <a href="https://laravel.com/docs/12.x" target="_blank" style="text-decoration: none;">
-    <img src="public/logo-laravel12.png" height="35" style="vertical-align: middle; margin-right: 5px;" alt="Laravel Logo">
-  </a>
-  <span style="display: inline-block; vertical-align: middle; font-size: 25px; color: #ccc; margin: 0 10px 0 7px;">+</span>
-  <a href="https://nativephp.com/docs/desktop/2" target="_blank">
-    <img src="public/logo-nativephp.png" width="40" height="40" style="vertical-align: middle; border-radius: 12px;" alt="NativePHP Logo">
-  </a>
-  <span style="display: inline-block; vertical-align: middle; font-size: 11px; color: #ccc; margin: 25px 10px 0 5px;">Desktop</span>
-</div>
-
 <h2 align="center">Laravel 12 + NativePHP Desktop</h2>
 
+<div align="center" style="display: block; margin-bottom: 20px;">
+  <a href="https://laravel.com/docs/12.x" style="text-decoration: none;" target="_blank"><img src="public/logo-laravel12.png" height="77" style="vertical-align: middle; margin-right: 5px;" alt="Laravel Logo"></a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://nativephp.com/docs/desktop/2" style="text-decoration: none;" target="_blank"><img src="public/logo-nativephp.png" width="83" height="80" style="vertical-align: middle; border-radius: 12px;" alt="NativePHP Logo"></a>
+</div>
+<p></p>
 <p align="center">
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
