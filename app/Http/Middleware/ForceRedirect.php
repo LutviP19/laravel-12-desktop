@@ -21,6 +21,7 @@ class ForceRedirect
         // Gunakan pattern '*' agar lebih dinamis untuk ID atau sub-path
         $excludedPatterns = [
             '/',
+            'refresh-csrf',
             'notification-detail-public/*',
             'reset-password/*',
             'profile*',

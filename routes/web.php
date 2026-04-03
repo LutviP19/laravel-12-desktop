@@ -59,8 +59,27 @@ Route::get('/notification-detail-public', function () {
     return view('notification-detail');
 })->name('notification');
 
+
 // Auth middleware 'auth', 
 Route::middleware(['htmx.auth'])->group(function () {
+
+    // Pastikan lewat middleware 'web' agar session aktif
+    Route::middleware(['web'])->group(function () {
+        // Refresh CSRF
+        Route::get('/refresh-csrf', function () {
+            // // Menghapus token lama dan membuat yang baru dalam sesi yang sama
+            // \Illuminate\Support\Facades\Session::regenerateToken(); 
+            
+            // // Atau jika ingin ID Sesi-nya juga ganti (lebih aman dari Session Fixation)
+            // request()->session()->regenerate();
+
+            $token = csrf_token();
+            \Illuminate\Support\Facades\Log::debug('New CSRF-TOKEN: '.$token);
+            return response()->json(['token' => $token]);
+            exit;
+        })->name('refresh.csrf'); 
+    });
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -171,7 +171,7 @@
     </div>
 
     <!-- Global CSRF Holder  -->
-    <div id="csrf-holder">
+     <div id="csrf-holder">
         @csrf
     </div>
 
@@ -198,7 +198,7 @@
         // Listener untuk menangani redirect dengan jeda waktu
         window.addEventListener('delayedRedirect', (event) => {
             const url = event.detail.url;
-            const delay = event.detail.ms || 2000; // default 2 detik jika tidak diatur
+            const delay = event.detail.ms || 2000; // default 2 detik jika tidak diatur            
 
             if (url) {
                 setTimeout(() => {
@@ -211,6 +211,89 @@
                     }
                 }, delay);
             }
+        });
+
+        // Untuk menjaga agar token CSRF tetap valid dan sesi tidak menggantung
+        document.addEventListener('DOMContentLoaded', () => {
+            let idleTimer;
+            
+            // Konfigurasi: 1 jam (3600000 ms)
+            const IDLE_TIMEOUT = 60 * 60 * 1000;
+            // const IDLE_TIMEOUT = 60 * 60 * 10; // Debug
+            const REDIRECT_URL = '/dashboard';
+            const refreshTokens = () => {
+                const currentToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+                fetch('/refresh-csrf', {
+                    method: 'GET',
+                    credentials: 'include',
+                    redirect: 'manual', 
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': currentToken, // Menambahkan token CSRF ke header
+                        'HX-Request': 'true' // Memberitahu Laravel bahwa ini adalah request HTMX
+                    }
+                })
+                .then(response => {
+                    // Jika middleware melempar 302 (dianggap ok oleh fetch jika sdh sampai login page)
+                    // atau jika response bukan 200 OK, berarti session mati.
+                    if (!response.ok || response.redirected) {
+                        throw new Error('Session Expired');
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    const newToken = data.token;
+                    // alert('newToken: ' + newToken);
+
+                    // 1. Update Meta Tag
+                    const metaTag = document.querySelector('meta[name="csrf-token"]');
+                    if (metaTag) metaTag.setAttribute('content', newToken);
+
+                    // 2. Update Global CSRF Holder (Elemen Input Hidden)
+                    const csrfHolder = document.getElementById('csrf-holder');
+                    if (csrfHolder) {
+                        const inputHidden = csrfHolder.querySelector('input[name="_token"]');
+                        if (inputHidden) inputHidden.value = newToken;
+                    }
+
+                    // 3. Update semua @csrf di dalam form lain (opsional)
+                    document.querySelectorAll('input[name="_token"]').forEach(input => {
+                        input.value = newToken;
+                    });
+
+                    // console.log('CSRF Token successfully refreshed without reload.');
+                    // alert('CSRF Token successfully refreshed without reload.');
+                })
+                .catch(err => {
+                    // console.error('Failed to refresh CSRF, falling back to hard reload.');
+                    // alert('Redirect to: ' + REDIRECT_URL);
+                    window.location.href = REDIRECT_URL; // Jika AJAX gagal, baru hard reload
+                });
+            };
+
+            const resetTimer = () => {
+                // Hapus timer yang sedang berjalan
+                if (idleTimer) clearTimeout(idleTimer);
+
+                idleTimer = setTimeout(() => { refreshTokens(); }, IDLE_TIMEOUT);
+            };
+
+            // Daftar aktivitas yang dianggap sebagai "User Aktif"
+            const activityEvents = [
+                'mousedown', 'mousemove', 'keypress', 
+                'scroll', 'touchstart', 'click'
+            ];
+
+            // Daftarkan listener untuk setiap jenis aktivitas
+            activityEvents.forEach(eventName => {
+                document.addEventListener(eventName, resetTimer, { passive: true });
+            });
+
+            // Jalankan timer pertama kali saat halaman dimuat
+            resetTimer();
         });
     </script>
 
