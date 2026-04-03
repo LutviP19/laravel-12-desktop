@@ -1,6 +1,6 @@
 <div align="center" style="display: block; margin-bottom: 20px;">
   <a href="https://laravel.com/docs/12.x" target="_blank" style="text-decoration: none;">
-    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" height="75" style="vertical-align: middle; margin-right: -25px;" alt="Laravel Logo">
+    <img src="public/laravel-logolockup-cmyk-red.png" height="35" style="vertical-align: middle; margin-right: 5px;" alt="Laravel Logo">
     <div style="display: inline-block; vertical-align: middle; width: 40px; height: 40px;">
         <svg viewBox="0 0 440 376" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g>
