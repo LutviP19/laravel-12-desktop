@@ -20,6 +20,10 @@
 /storage/pail
 /vendor
 /dist
+/nativephp
+/bootstrap/cache/*
+!bootstrap/cache/.gitignore
+/storage/*.key
 Homestead.json
 Homestead.yaml
 Thumbs.db
