@@ -49,6 +49,8 @@ touch database/database.sqlite
 php artisan migrate
 
 php artisan native:install
+
+php artisan native:run
 ```
 
 ## ⚙️ Jalankan Aplikasi (Mode Development)

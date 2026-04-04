@@ -73,11 +73,11 @@
         ],
         "native:dev": [
             "Composer\\Config::disableProcessTimeout",
-            "/usr/bin/php artisan config:clear",
-            "/usr/bin/php artisan view:clear",
-            "/usr/bin/php artisan cache:clear",
-            "/usr/bin/php artisan route:clear",
-            "npx concurrently -k -c \"#93c5fd,#c4b5fd\" \"/usr/bin/php artisan native:serve --no-interaction\" \"npm run dev\" --names=app,vite"
+            "@php artisan config:clear",
+            "@php artisan view:clear",
+            "@php artisan cache:clear",
+            "@php artisan route:clear",
+            "npx concurrently -k -c \"#93c5fd,#c4b5fd\" \"php artisan native:serve --no-interaction\" \"npm run dev\" --names=app,vite"
         ],
         "pre-native-build": [
             "@php artisan config:clear",
@@ -89,7 +89,7 @@
         ],
         "native-build": [
             "@composer run pre-native-build",
-            "export COMPOSER_PROCESS_TIMEOUT=1800 && php -d memory_limit=-1 artisan native:build"
+            "@php artisan native:build"
         ]
     },
     "extra": {
