@@ -36,7 +36,7 @@ Aplikasi desktop modern yang dibangun dengan kekuatan **Laravel 12**, **NativePH
 ## 🚀 Instalasi
 
 ```bash 
-composer install
+composer setup
 
 npm install && npm run build
 
@@ -47,6 +47,8 @@ php artisan key:generate
 touch database/database.sqlite
 
 php artisan migrate
+
+php artisan native:install
 ```
 
 ## ⚙️ Jalankan Aplikasi (Mode Development)
@@ -59,6 +61,6 @@ composer native:dev
 
 ## 📦 Build & Distribution
 ```bash 
-php artisan native:build
+composer run native-build
 ```
 
