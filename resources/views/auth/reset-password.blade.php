@@ -6,7 +6,12 @@
     <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Password Baru</h2>
     <p class="text-sm text-slate-500 mb-6">Silakan masukkan password baru Anda.</p>
 
-    <form hx-post="{{ route('password.update') }}" hx-target="#reset-error">
+    <form hx-post="{{ route('password.update') }}" hx-target="#reset-error"
+          @input="
+                const errDiv = document.getElementById('reset-error');
+                errDiv.innerHTML = ''; 
+                errDiv.className = 'empty:hidden mb-0';
+            ">
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">
 

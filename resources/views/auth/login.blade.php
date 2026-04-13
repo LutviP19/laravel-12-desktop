@@ -3,7 +3,12 @@
 
 @section('content')
 <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 transition-colors duration-300">
-    <form hx-post="/login" hx-target="#login-error" hx-swap="innerHTML">
+    <form hx-post="/login" hx-target="#login-error" hx-swap="innerHTML" 
+          @input="
+                const errDiv = document.getElementById('login-error');
+                errDiv.innerHTML = ''; 
+                errDiv.className = 'empty:hidden mb-0';
+            ">
         @csrf
         <div class="space-y-5">
             <div>
