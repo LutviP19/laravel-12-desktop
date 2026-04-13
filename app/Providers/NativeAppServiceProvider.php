@@ -46,9 +46,10 @@ class NativeAppServiceProvider implements ProvidesPhpIni
         // Window::open();
         Window::open('main')
                 ->title(config('app.name'))
-                // ->url(route('notification'))
                 ->showDevTools(false)
-                ->rememberState();
+                ->rememberState()
+                ->width(800)
+                ->height(920);
 
         // Menjalankan Laravel Scheduler sebagai background process di Desktop
         // 'schedule:work' akan terus berjalan selama aplikasi terbuka
